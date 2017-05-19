@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Coba Physics</title>
+    <title>Final Project CG 2017</title>
     <script type="text/javascript" src="assets/js/babylon.js"></script>
     <script type="text/javascript" src="assets/js/hand-1.3.7.js"></script>
     <link rel="stylesheet" type="text/css" href="assets/css/style.css">
@@ -26,7 +26,7 @@
 
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(-10, 3, 0), scene);
     var inputManager = camera.inputs;
-    camera.rotation.y = 45.565;	
+    camera.rotation.y = 45.55;
     inputManager.clear();
     camera.inputs.addMouse();
 
@@ -36,39 +36,183 @@
     var ground = BABYLON.Mesh.CreateGround("ground1", 12,12,2, scene);
     var matGround = new BABYLON.StandardMaterial("tex", scene);
     ground.material = matGround;
-    ground.material.diffuseTexture = new BABYLON.Texture("assets/images/grass.jpg", scene);
-    ground.scaling.x = 20;
-    ground.scaling.z = 20;
+    //    ground.material.diffuseTexture = new BABYLON.Texture("grass.jpg", scene);
+    ground.scaling.x = 10;
+    ground.scaling.z = 10;
     ground.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution:
-                                0.5});
+        0.5});
+
+    var metal = new BABYLON.StandardMaterial("metal", scene);
+    metal.diffuseTexture = new BABYLON.Texture("assets/images/metal.jpg", scene);
+    metal.specularColor = new BABYLON.Color3(1,1,1);
 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
     ball.position.y = 1;
     ball.position.x = -3;
-    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 2, friction: 1, restitution:
-                        1.25});
+    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1.5, friction: 1, restitution:
+        0.5});
 
-    var can = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
-    can.position.y = 1.61;
+    var can = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 100, 1, scene);
+    can.position.y = 1.6;
     can.position.x = 10;
-    can.position.z = 1.2575;
-    can.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 0.75, restitution:
-                        0.25});
+    can.position.z = 1.255;
+    can.material = metal;
+    can.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 1, restitution:
+        0.25});
 
-    var can1 = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
-    can1.position.y = 1.61;
+    var can1 = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 100, 1, scene);
+    can1.position.y = 1.6;
     can1.position.x = 10;
-    can1.position.z = -1.2575;
-    can1.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 0.75, restitution:
-                        0.25});
+    can1.position.z = -1.255;
+    can1.material = metal;
+    can1.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 1, restitution:
+        0.25});
 
-    var can2 = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
-    can2.position.y = 4.615;
+    var can2 = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 100, 1, scene);
+    can2.position.y = 4.6;
     can2.position.x = 10;
-    can2.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 0.75, restitution:
-                        0.25});
-    var power = 0;
+    can2.material = metal;
+    can2.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 1, restitution:
+        0.25});
+
     var pressed = false;
+
+    var score=0;
+
+
+
+    //---------------------------------------------------------------------------------------------------------
+    // Tambahan steven
+
+    var scoreboard = new BABYLON.ScreenSpaceCanvas2D(scene, {
+        id: "ScreenCanvas", parent:canvas, x:1500, y:870,
+        size: new BABYLON.Size(250, 100),
+        backgroundFill: "#4040408F",
+        backgroundRoundRadius: 25,
+    });
+
+    var scoreValue = new BABYLON.Text2D("Score : "+score, {
+        parent : scoreboard,
+        id: "text",
+        marginAlignment: "h: center, v:center",
+        fontName: "20pt Arial",
+    });
+
+    //    for(var i=32;i<=1000;++i) console.log(String.fromCharCode(i)+ " - "+i);
+
+
+    var colorRed = new BABYLON.StandardMaterial("colorRed", scene);
+    colorRed.diffuseColor = new BABYLON.Color3(1,0.2,0.2);
+
+    var colorYellow = new BABYLON.StandardMaterial("colorYellow", scene);
+    colorYellow.diffuseColor = new BABYLON.Color3(1,1,0.2);
+
+    var colorOrange = new BABYLON.StandardMaterial("colorOrange", scene);
+    colorOrange.diffuseColor = new BABYLON.Color3(1,0.6,0.2);
+
+    var power = [];
+    var barAmount = 30;
+    var currPower = 1;
+    var rising = true;
+    var distanceRate = 17;
+    var shooting = false;
+    var shootingPower;
+    var maxPower = 30;
+    var shootReset=false;
+    var currentColor;
+
+    var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
+        parent:canvas, x:1685, y:distanceRate+200-distanceRate,
+        size: new BABYLON.Size(50, barAmount*distanceRate-80),
+        backgroundFill: "#000000FF",
+        backgroundRoundRadius: 15,
+    });
+
+    for(var i=1; i<=barAmount; i++){
+
+        if(i<=(barAmount*1/3))
+            currentColor = "#FFD100FF";
+        else if(i<=(barAmount*2/3))
+            currentColor = "#FF8700FF";
+        else
+            currentColor = "#FF0000FF";
+
+        power[i] = new BABYLON.ScreenSpaceCanvas2D(scene, {
+            parent:canvas, x:1700, y:i*distanceRate+200,
+            size: new BABYLON.Size(25, 10),
+            backgroundFill: currentColor,
+        });
+        power[i].levelVisible = false;
+    }
+
+
+
+    window.onkeydown = function (event){
+        event = event || window.event;
+        var keyCodeDown = event.which || event.keyCode;
+
+        switch(keyCodeDown)
+        {
+            case 32: // (space)
+                if(shootReset)
+                {
+                    shootReset=false;
+                    currPower=1;
+                    rising=true;
+
+                    for(var i=1; i<=barAmount; i++)
+                        power[i].levelVisible = false;
+                }
+                shooting = true;
+                break;
+        }
+    }
+
+    window.onkeyup = function (event){
+        event = event || window.event;
+        var keyCodeUp = event.which || event.keyCode;
+
+        switch(keyCodeUp)
+        {
+            case 32: // (space)
+                shooting = false;
+                pressed=true;
+                break;
+        }
+    }
+
+    function bar(){
+        if(shooting)
+        {
+            if(rising)
+            {
+                power[currPower].levelVisible = true;
+                currPower++;
+                if(currPower>barAmount)
+                {
+                    rising = false;
+                    currPower = barAmount;
+                }
+            }
+            else
+            {
+                power[currPower].levelVisible = false;
+                currPower--;
+                if(currPower<1)
+                {
+                    rising = true;
+                    currPower = 1;
+                }
+            }
+        }
+    }
+
+
+
+    //------------------------------------------------------------------------------------------------------------
+
+
+
 
     // camera.lockedTarget = can2;
 
@@ -77,66 +221,50 @@
             engine.isPointerLock = true;
             camera.attachControl(canvas, false);
             canvas.requestPointerLock = canvas.requestPointerLock ||
-                                        canvas.mozRequestPointerLock ||
-                                        canvas.webkitRequestPointerLock;
+                canvas.mozRequestPointerLock ||
+                canvas.webkitRequestPointerLock;
             canvas.requestPointerLock();
         }
         else{
             engine.isPointerLock = false;
             camera.detachControl(canvas);
             document.exitPointerLock = document.exitPointerLock ||
-                                        document.mozExitPointerLock ||
-                                        document.webkitExitPointerLock;
+                document.mozExitPointerLock ||
+                document.webkitExitPointerLock;
             document.exitPointerLock();
         }
-        camera.rotation.y = 45.55;  
+        camera.rotation.y = 45.55;
         camera.rotation.x = 0;
         camera.rotation.z = 0;
         camControl = !camControl;
     };
 
     window.addEventListener("mousemove", function(){
-    	var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+        var pickResult = scene.pick(scene.pointerX, scene.pointerY);
 
-    	// camera.rotationOffset += scene.pointerX/1000;
+        // camera.rotationOffset += scene.pointerX/1000;
 
-        if (camControl){
-        	console.log("x = "+camera.rotation.x);
-        	console.log("y = "+camera.rotation.y);
-        }
+//    	console.log(scene.pointerX);
+//    	console.log(scene.pointerY);
     });
 
-    window.onkeydown = function(event){
-        event = event || window.event;
-        var keyCode = event.which || event.keyCode;
 
-        if (keyCode == 32){
-            power += 1;
-        }
-        else if (keyCode == 82){
-            ball.position.y = 1;
-            ball.position.x = -3;
-
-        }
-    }
-
-    window.onkeyup = function(event){
-        event = event || window.event;
-        var keyCode = event.which || event.keyCode;
-
-        if (keyCode == 32){
-            pressed = true;
-        }
-    }
 
     engine.runRenderLoop(function(){
+        bar();
+
         if (pressed){
+            shootingPower = (currPower/barAmount) * maxPower;
+
             ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(
-                                            power*(Math.cos(Math.PI/4)), power*(Math.sin(Math.PI/4)), 0),
-                                            ball.getAbsolutePosition());
+                    shootingPower*(Math.cos(Math.PI/4)), shootingPower*(Math.sin(Math.PI/4)), 0),
+                ball.getAbsolutePosition());
+
             pressed = false;
-            power = 0;
+            shootReset = true;
         }
+
+
         scene.render();
     });
 
