@@ -24,9 +24,8 @@
     scene.enablePhysics(gravityVector, physicsPlugin);
     scene.collisionsEnabled = true;
 
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(-10, 3, 0), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 3, 0), scene);
     var inputManager = camera.inputs;
-    camera.rotation.y = 45.55;
     inputManager.clear();
     camera.inputs.addMouse();
 
@@ -36,11 +35,11 @@
     var ground = BABYLON.Mesh.CreateGround("ground1", 12,12,2, scene);
     var matGround = new BABYLON.StandardMaterial("tex", scene);
     ground.material = matGround;
-    //    ground.material.diffuseTexture = new BABYLON.Texture("grass.jpg", scene);
+//    ground.material.diffuseTexture = new BABYLON.Texture("grass.jpg", scene);
     ground.scaling.x = 10;
     ground.scaling.z = 10;
     ground.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution:
-        0.5});
+                                0});
 
     var metal = new BABYLON.StandardMaterial("metal", scene);
     metal.diffuseTexture = new BABYLON.Texture("assets/images/metal.jpg", scene);
@@ -48,32 +47,50 @@
 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
     ball.position.y = 1;
-    ball.position.x = -3;
-    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 1.5, friction: 1, restitution:
-        0.5});
+    ball.position.x = 0;
+    ball.position.z = 5;
+    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 5, friction: 5, restitution:
+        1});
 
-    var can = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 100, 1, scene);
+    var can = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can.position.z = 17;
+    can.position.x = -1.25;
     can.position.y = 1.6;
-    can.position.x = 10;
-    can.position.z = 1.255;
     can.material = metal;
-    can.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 1, restitution:
-        0.25});
+    can.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
+                        0});
 
-    var can1 = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 100, 1, scene);
+    var can1 = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can1.position.z = 17;
+    can1.position.x = 1.25;
     can1.position.y = 1.6;
-    can1.position.x = 10;
-    can1.position.z = -1.255;
     can1.material = metal;
-    can1.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 1, restitution:
-        0.25});
+    can1.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
+                        0});
 
-    var can2 = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 100, 1, scene);
-    can2.position.y = 4.6;
-    can2.position.x = 10;
+    var can2 = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can2.position.z = 17;
+    can2.position.y = 5;
     can2.material = metal;
-    can2.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 0.45, friction: 1, restitution:
-        0.25});
+    can2.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
+                        0});
+
+    var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
+    cross.hasAlpha = true;
+
+    var canvas1 = new BABYLON.ScreenSpaceCanvas2D(scene, {
+        id: "ScreenCanvas", x:canvas.clientWidth/2+124, y:canvas.clientHeight/2+50,
+        size: new BABYLON.Size(100, 100),
+        // backgroundFill: "#5b5b5b8F",
+        // backgroundRoundRadius: 50,
+        children: [
+            new BABYLON.Sprite2D(cross, {
+                id: "cross",
+                marginAlignment: "h: center, v:center",
+                scale: 0.045
+            })
+        ]
+    });
 
     var pressed = false;
 
@@ -83,6 +100,9 @@
 
     //---------------------------------------------------------------------------------------------------------
     // Tambahan steven
+
+
+
 
     var scoreboard = new BABYLON.ScreenSpaceCanvas2D(scene, {
         id: "ScreenCanvas", parent:canvas, x:1500, y:870,
@@ -117,12 +137,12 @@
     var distanceRate = 17;
     var shooting = false;
     var shootingPower;
-    var maxPower = 30;
+    var maxPower = 75;
     var shootReset=false;
     var currentColor;
 
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        parent:canvas, x:1685, y:distanceRate+200-distanceRate,
+        parent:canvas, x:1685, y:200,
         size: new BABYLON.Size(50, barAmount*distanceRate-80),
         backgroundFill: "#000000FF",
         backgroundRoundRadius: 15,
@@ -233,9 +253,6 @@
                 document.webkitExitPointerLock;
             document.exitPointerLock();
         }
-        camera.rotation.y = 45.55;
-        camera.rotation.x = 0;
-        camera.rotation.z = 0;
         camControl = !camControl;
     };
 
@@ -255,10 +272,10 @@
 
         if (pressed){
             shootingPower = (currPower/barAmount) * maxPower;
-
-            ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(
-                    shootingPower*(Math.cos(Math.PI/4)), shootingPower*(Math.sin(Math.PI/4)), 0),
-                ball.getAbsolutePosition());
+            ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(Math.sin(camera.rotation.y)*shootingPower*1.25,
+                                            Math.sin(camera.rotation.x-0.5)*shootingPower*-1.75, Math.cos(camera.rotation.y)*
+                                            shootingPower*1.25),
+                                            ball.getAbsolutePosition());
 
             pressed = false;
             shootReset = true;
