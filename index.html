@@ -20,9 +20,13 @@
     var scene = new BABYLON.Scene(engine);
     var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
     var physicsPlugin = new BABYLON.CannonJSPlugin();
- 
+
     scene.enablePhysics(gravityVector, physicsPlugin);
     scene.collisionsEnabled = true;
+
+    //get window size of client(user)
+    var screenW = window.innerWidth;
+    var screenH = window.innerHeight;
  
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -10), scene);
     var inputManager = camera.inputs;
@@ -53,8 +57,7 @@
     cola.diffuseTexture = new BABYLON.Texture("assets/models/can/bonus/cokecan.jpg", scene);
     cola.specularColor = new BABYLON.Color3(1,1,1);
  
-    var exx = new BABYLON.StandardMaterial("metal", scene);
-    exx.alpha = 0;
+
 
     // var box = BABYLON.Mesh.CreateBox("box", 1, scene);
     // box.parent = camera;
@@ -69,7 +72,7 @@
 
 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
-    ball.material = exx;
+
     ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 5, friction: 5, restitution:
                         1});
     ball.position.y = 2;
@@ -210,13 +213,118 @@
  
  
     //---------------------------------------------------------------------------------------------------------
-    // Tambahan steven
- 
- 
+    // Tambahan gw
+
+    //---------------------------------------------------------------------------------------------------------
+        //wall to stop ball from moving
+    var w1 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
+    w1.position.z = 5;
+    w1.position.y = -40;
+    w1.position.x = -5;
+    w1.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+
+    var w2 = BABYLON.Mesh.CreateBox("sphere",1, scene);
+    w2.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+    w2.position.z = w1.position.z;
+    w2.position.y = w1.position.y + 1.5;
+    w2.position.x = w1.position.x - 1.6;
+
+
+    var w3 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
+    w3.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+    w3.position.z = w1.position.z;
+    w3.position.y = w1.position.y + 1.5;
+    w3.position.x = w1.position.x + 1.6;
+
+
+    var w4 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
+    w4.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+    w4.position.z = w1.position.z - 1.6;
+    w4.position.y = w1.position.y + 1.5;
+    w4.position.x = w1.position.x;
+
+
+    var w5 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
+    w5.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+    w5.position.z = w1.position.z + 1.6;
+    w5.position.y = w1.position.y + 1.5;
+    w5.position.x = w1.position.x;
+
+
+    var w6 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
+    w6.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+    w6.position.z = w1.position.z;
+    w6.position.y = w1.position.y + 3.4;
+    w6.position.x = w1.position.x;
+
+    ball.position.x = w1.position.x;
+    ball.position.z = w1.position.z;
+    ball.position.y = w1.position.y+1.7;
+
+
+    //---------------------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------
+        //ball amount & HUD
+    var ballAmount = 3;
+
+    var iconBall = new BABYLON.Texture("assets/images/iconBall.png", scene);
+    iconBall.hasAlpha = true;
+
+    greenBar = new BABYLON.ScreenSpaceCanvas2D(scene, {
+        id: "ballHUD", parent:canvas, x:screenW-1420, y:screenH+75,
+        size: new BABYLON.Size(150, 5),
+        backgroundFill: "#00FF00FF",
+        backgroundRoundRadius: 2,
+    });
+
+    redBar = new BABYLON.ScreenSpaceCanvas2D(scene, {
+        id: "ballHUD", parent:canvas, x:screenW-1420, y:screenH+75,
+        size: new BABYLON.Size(150, 5),
+        backgroundFill: "#FF0000FF",
+        backgroundRoundRadius: 2,
+    });
+    redBar.levelVisible = false;
+
+    var iconBallArr = [];
+
+    for(var i=1; i<=ballAmount; i++)
+    {
+        iconBallArr[i] = new BABYLON.ScreenSpaceCanvas2D(scene, {
+            id: "ballHUD", parent:canvas, x:screenW-1450+((i-1)*60), y:screenH+60,
+            size: new BABYLON.Size(100, 100),
+            backgroundFill: "#40404000",
+            backgroundRoundRadius: 25,
+        });
+        new BABYLON.Sprite2D(iconBall, {
+            parent:iconBallArr[i],
+            id: "ballHUD",
+            marginAlignment: "h: center, v:center",
+            scale: 0.03
+        });
+    }
+        //---------------------------------------------------------------------------------------------------------
+
+
+
+
+    //parallel array to can
+    var parallelArr = [];
+    for(var i=1; i<=9; i++)
+        parallelArr[i]=false;
+
+
+
+    console.log(screenH+" "+screenW);
  
  
     var scoreboard = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ScreenCanvas", parent:canvas, x:1500, y:870,
+        id: "ScreenCanvas", parent:canvas, x:screenW+26, y:screenH+50,
         size: new BABYLON.Size(250, 100),
         backgroundFill: "#4040408F",
         backgroundRoundRadius: 25,
@@ -240,7 +348,8 @@
  
     var colorOrange = new BABYLON.StandardMaterial("colorOrange", scene);
     colorOrange.diffuseColor = new BABYLON.Color3(1,0.6,0.2);
- 
+
+
     var power = [];
     var barAmount = 30;
     var currPower = 1;
@@ -253,7 +362,7 @@
     var currentColor;
  
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        parent:canvas, x:1685, y:200,
+        parent:canvas, x:screenW+250, y:200,
         size: new BABYLON.Size(50, barAmount*distanceRate-80),
         backgroundFill: "#000000FF",
         backgroundRoundRadius: 15,
@@ -269,7 +378,7 @@
             currentColor = "#FF0000FF";
  
         power[i] = new BABYLON.ScreenSpaceCanvas2D(scene, {
-            parent:canvas, x:1700, y:i*distanceRate+200,
+            parent:canvas, x:barContainer.x+15, y:i*distanceRate+200,
             size: new BABYLON.Size(25, 10),
             backgroundFill: currentColor,
         });
@@ -378,51 +487,70 @@
 //      console.log(scene.pointerX);
 //      console.log(scene.pointerY);
     });
- 
+
+
     function refresh(){
         for(var i=1; i<=9; i++)
         {
-            if(can[i].position.y <= table2.position.y){
+            if(can[i].position.y <= table2.position.y && !parallelArr[i]){
                 score++;
+                parallelArr[i]=true;
             }
         }
         scoreValue.text = "Score : "+score;
- 
+        thrown=false;
+
+        ball.position.x = w1.position.x;
+        ball.position.z = w1.position.z;
+        ball.position.y = w1.position.y+1.7;
+
+        if(ballAmount>0)
+        {
+            greenBar.levelVisible = true;
+            redBar.levelVisible = false;
+
+            ballDummy.parent = camera;
+        }
     }
  
     engine.runRenderLoop(function(){
-        bar();
- 
-        if (pressed && !thrown){
-            // ball.position.y = Math.sin(camera.rotation.x)*1;
-            // ball.position.x = Math.sin(camera.rotation.y)*5;
-            // ball.position.z = Math.cos(camera.rotation.y)*5;
-            shootingPower = (currPower/barAmount) * maxPower;
+        if(ballAmount>0)
+        {
+            bar();
 
-            ball.position.y = 5.5;
-            ball.position.x = Math.sin(camera.rotation.y)*5;
-            ball.position.z = Math.cos(camera.rotation.y)*5 + camera.position.z;
+            if (pressed && !thrown){
+                shootingPower = (currPower/barAmount) * maxPower;
 
-            ballDummy.parent = null;
-            exx.alpha = 1;
-            
+                ballDummy.parent = null;
 
-            ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(Math.sin(camera.rotation.y)*shootingPower*1.25,
-                                            Math.sin(camera.rotation.x-0.5)*shootingPower*-1.75, Math.cos(camera.rotation.y)*
-                                            shootingPower*1.25),
-                                            ball.getAbsolutePosition());
+                ball.position.y = 5.5;
+                ball.position.x = Math.sin(camera.rotation.y)*5;
+                ball.position.z = Math.cos(camera.rotation.y)*5 + camera.position.z;
 
 
-            pressed = false;
-            shootReset = true;
-            thrown = true;
 
-            setTimeout(function(){
-                refresh();
-            }, 5000);
+
+                ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(Math.sin(camera.rotation.y)*shootingPower*1.25,
+                        Math.sin(camera.rotation.x-0.5)*shootingPower*-1.75, Math.cos(camera.rotation.y)*
+                        shootingPower*1.25),
+                    ball.getAbsolutePosition());
+
+
+                pressed = false;
+                shootReset = true;
+                thrown = true;
+                greenBar.levelVisible = false;
+                redBar.levelVisible = true;
+
+                iconBallArr[ballAmount].levelVisible=false;
+                ballAmount--;
+
+                setTimeout(function(){
+                    refresh();
+                }, 5000);
+            }
         }
- 
- 
+
         scene.render();
     });
  
