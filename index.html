@@ -24,12 +24,12 @@
     scene.enablePhysics(gravityVector, physicsPlugin);
     scene.collisionsEnabled = true;
 
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 3, 0), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -10), scene);
     var inputManager = camera.inputs;
     inputManager.clear();
     camera.inputs.addMouse();
 
-    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0,15,0), scene);
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0,15,-10), scene);
     light.intensity = 0.7;
 
     var ground = BABYLON.Mesh.CreateGround("ground1", 12,12,2, scene);
@@ -45,35 +45,42 @@
     metal.diffuseTexture = new BABYLON.Texture("assets/images/metal.jpg", scene);
     metal.specularColor = new BABYLON.Color3(1,1,1);
 
+    var steel = new BABYLON.StandardMaterial("steel", scene);
+    steel.diffuseTexture = new BABYLON.Texture("assets/images/steel.jpg", scene);
+    steel.specularColor = new BABYLON.Color3(1,1,1);
+
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
     ball.position.y = 1;
     ball.position.x = 0;
     ball.position.z = 5;
+    ball.material = metal;
     ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 5, friction: 5, restitution:
         1});
 
-    var can = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
-    can.position.z = 17;
-    can.position.x = -1.25;
-    can.position.y = 1.6;
-    can.material = metal;
-    can.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
-                        0});
+    var can=[];
 
-    var can1 = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
-    can1.position.z = 17;
-    can1.position.x = 1.25;
-    can1.position.y = 1.6;
-    can1.material = metal;
-    can1.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
-                        0});
+    can[1] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can[1].position.z = 17;
+    can[1].position.x = -1.26;
+    can[1].position.y = 6.5;
+    can[1].material = metal;
+    can[1].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+                        0.1});
 
-    var can2 = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
-    can2.position.z = 17;
-    can2.position.y = 5;
-    can2.material = metal;
-    can2.setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
-                        0});
+    can[2] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can[2].position.z = 17;
+    can[2].position.x = 1.26;
+    can[2].position.y = 6.5;
+    can[2].material = metal;
+    can[2].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+                        0.1});
+
+    can[3] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can[3].position.z = 17;
+    can[3].position.y = 11;
+    can[3].material = metal;
+    can[3].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+        0.1});
 
     var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
     cross.hasAlpha = true;
@@ -93,8 +100,41 @@
     });
 
     var pressed = false;
-
     var score=0;
+
+    //---------------------------------------------------------------------------------------------------------
+    //table
+
+    var table1 = BABYLON.Mesh.CreateBox("table1", 1, scene);
+    table1.position.x = -14.5;
+    table1.scaling.y = 4;
+    table1.scaling.z = 4;
+    table1.position.z = 17;
+    table1.position.y = 2;
+    table1.material = steel;
+    table1.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
+        0.1});
+
+    var table2 = BABYLON.Mesh.CreateBox("table2", 1, scene);
+    table2.position.z = table1.position.z;
+    table2.scaling.z = table1.scaling.z;
+    table2.scaling.x = 30;
+    table2.position.x = table1.position.x + 14.5;
+    table2.position.y = table1.position.y + 2.5;
+    table2.material = steel;
+    table2.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
+        0.1});
+
+    var table3 = BABYLON.Mesh.CreateBox("table3", 1, scene);
+    table3.scaling.y = 4;
+    table3.scaling.z = table1.scaling.z;
+    table3.position.z = table1.position.z;
+    table3.position.x = table1.position.x + 29;
+    table3.position.y = table1.position.y;
+    table3.material = steel;
+    table3.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
+        0.1});
+
 
 
 
@@ -228,7 +268,6 @@
     }
 
 
-
     //------------------------------------------------------------------------------------------------------------
 
 
@@ -265,7 +304,9 @@
 //    	console.log(scene.pointerY);
     });
 
-
+function refre(){
+    console.log("ko");
+}
 
     engine.runRenderLoop(function(){
         bar();
@@ -279,6 +320,10 @@
 
             pressed = false;
             shootReset = true;
+
+            setTimeout(function(){
+                refre();
+            }, 5000);
         }
 
 
