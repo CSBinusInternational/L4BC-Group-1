@@ -48,6 +48,10 @@
     var steel = new BABYLON.StandardMaterial("steel", scene);
     steel.diffuseTexture = new BABYLON.Texture("assets/images/steel.jpg", scene);
     steel.specularColor = new BABYLON.Color3(1,1,1);
+
+    var cola = new BABYLON.StandardMaterial("cola", scene);
+    cola.diffuseTexture = new BABYLON.Texture("assets/models/can/bonus/cokecan.jpg", scene);
+    cola.specularColor = new BABYLON.Color3(1,1,1);
  
     var exx = new BABYLON.StandardMaterial("metal", scene);
     exx.alpha = 0;
@@ -73,11 +77,12 @@
  
     var can=[];
  
+    // middle can
     can[1] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
     can[1].position.z = 17;
     can[1].position.x = -1.26;
     can[1].position.y = 6.5;
-    can[1].material = metal;
+    can[1].material = cola;
     can[1].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
                         0.1});
  
@@ -85,7 +90,7 @@
     can[2].position.z = 17;
     can[2].position.x = 1.26;
     can[2].position.y = 6.5;
-    can[2].material = metal;
+    can[2].material = cola;
     can[2].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
                         0.1});
  
@@ -95,6 +100,57 @@
     can[3].material = metal;
     can[3].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
         0.1});
+
+    // left can
+    can[4] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can[4].position.z = 17;
+    can[4].position.x = -12.26;
+    can[4].position.y = 6.5;
+    can[4].material = cola;
+    can[4].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+                        0.1});
+ 
+    can[5] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can[5].position.z = 17;
+    can[5].position.x = -9.76;
+    can[5].position.y = 6.5;
+    can[5].material = cola;
+    can[5].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+                        0.1});
+ 
+    can[6] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can[6].position.z = 17;
+    can[6].position.x = -11.26;
+    can[6].position.y = 11;
+    can[6].material = metal;
+    can[6].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+        0.1});
+
+    // right can
+    can[7] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can[7].position.z = 17;
+    can[7].position.x = 9.76;
+    can[7].position.y = 6.5;
+    can[7].material = cola;
+    can[7].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+                        0.1});
+ 
+    can[8] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can[8].position.z = 17;
+    can[8].position.x = 12.26;
+    can[8].position.y = 6.5;
+    can[8].material = cola;
+    can[8].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+                        0.1});
+ 
+    can[9] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can[9].position.z = 17;
+    can[9].position.x = 11;
+    can[9].position.y = 11;
+    can[9].material = metal;
+    can[9].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+        0.1});
+
  
  
     var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
@@ -324,7 +380,7 @@
     });
  
     function refresh(){
-        for(var i=1; i<=3; i++)
+        for(var i=1; i<=9; i++)
         {
             if(can[i].position.y <= table2.position.y){
                 score++;
