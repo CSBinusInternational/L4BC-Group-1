@@ -13,25 +13,25 @@
     var canvas = document.getElementById("myCanvas");
     var engine = new BABYLON.Engine(canvas, true);
     var camControl = false;
-
+ 
     // engine.isPointerLock = true;
     engine.switchFullscreen(true);
-
+ 
     var scene = new BABYLON.Scene(engine);
     var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
     var physicsPlugin = new BABYLON.CannonJSPlugin();
-
+ 
     scene.enablePhysics(gravityVector, physicsPlugin);
     scene.collisionsEnabled = true;
-
+ 
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -10), scene);
     var inputManager = camera.inputs;
     inputManager.clear();
     camera.inputs.addMouse();
-
+ 
     var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0,15,-10), scene);
     light.intensity = 0.7;
-
+ 
     var ground = BABYLON.Mesh.CreateGround("ground1", 12,12,2, scene);
     var matGround = new BABYLON.StandardMaterial("tex", scene);
     ground.material = matGround;
@@ -40,39 +40,25 @@
     ground.scaling.z = 10;
     ground.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution:
                                 0});
-
+ 
     var metal = new BABYLON.StandardMaterial("metal", scene);
     metal.diffuseTexture = new BABYLON.Texture("assets/images/metal.jpg", scene);
     metal.specularColor = new BABYLON.Color3(1,1,1);
-
+ 
     var steel = new BABYLON.StandardMaterial("steel", scene);
     steel.diffuseTexture = new BABYLON.Texture("assets/images/steel.jpg", scene);
     steel.specularColor = new BABYLON.Color3(1,1,1);
-
-    var exx = new BABYLON.StandardMaterial("metal", scene);
-    exx.alpha = 0;
-
-    // var box = BABYLON.Mesh.CreateBox("box", 1, scene);
-    // box.parent = camera;
-    // box.position.y = -2;
-
-    var thrown = false;
-    var ballDummy = BABYLON.Mesh.CreateSphere("wd", 50, 2, scene);
-    ballDummy.position.y = -100;
-    ballDummy.parent = camera;
-    ballDummy.position.y = -1;
-    ballDummy.position.z = 5;
-
-
+ 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
-    ball.material = exx;
-    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 5, friction: 5, restitution:
-                        1});
-    ball.position.y = 2;
+    ball.position.y = 1;
+    ball.position.x = 0;
     ball.position.z = 5;
-
+    ball.material = metal;
+    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 5, friction: 5, restitution:
+        1});
+ 
     var can=[];
-
+ 
     can[1] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
     can[1].position.z = 17;
     can[1].position.x = -1.26;
@@ -80,7 +66,7 @@
     can[1].material = metal;
     can[1].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
                         0.1});
-
+ 
     can[2] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
     can[2].position.z = 17;
     can[2].position.x = 1.26;
@@ -88,17 +74,18 @@
     can[2].material = metal;
     can[2].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
                         0.1});
-
+ 
     can[3] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
     can[3].position.z = 17;
     can[3].position.y = 11;
     can[3].material = metal;
     can[3].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
         0.1});
-
+ 
+ 
     var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
     cross.hasAlpha = true;
-
+ 
     var canvas1 = new BABYLON.ScreenSpaceCanvas2D(scene, {
         id: "ScreenCanvas", x:canvas.clientWidth/2+124, y:canvas.clientHeight/2+50,
         size: new BABYLON.Size(100, 100),
@@ -112,13 +99,13 @@
             })
         ]
     });
-
+ 
     var pressed = false;
     var score=0;
-
+ 
     //---------------------------------------------------------------------------------------------------------
     //table
-
+ 
     var table1 = BABYLON.Mesh.CreateBox("table1", 1, scene);
     table1.position.x = -14.5;
     table1.scaling.y = 4;
@@ -128,7 +115,7 @@
     table1.material = steel;
     table1.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
         0.1});
-
+ 
     var table2 = BABYLON.Mesh.CreateBox("table2", 1, scene);
     table2.position.z = table1.position.z;
     table2.scaling.z = table1.scaling.z;
@@ -138,7 +125,7 @@
     table2.material = steel;
     table2.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
         0.1});
-
+ 
     var table3 = BABYLON.Mesh.CreateBox("table3", 1, scene);
     table3.scaling.y = 4;
     table3.scaling.z = table1.scaling.z;
@@ -148,42 +135,42 @@
     table3.material = steel;
     table3.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
         0.1});
-
-
-
-
+ 
+ 
+ 
+ 
     //---------------------------------------------------------------------------------------------------------
     // Tambahan steven
-
-
-
-
+ 
+ 
+ 
+ 
     var scoreboard = new BABYLON.ScreenSpaceCanvas2D(scene, {
         id: "ScreenCanvas", parent:canvas, x:1500, y:870,
         size: new BABYLON.Size(250, 100),
         backgroundFill: "#4040408F",
         backgroundRoundRadius: 25,
     });
-
+ 
     var scoreValue = new BABYLON.Text2D("Score : "+score, {
         parent : scoreboard,
         id: "text",
         marginAlignment: "h: center, v:center",
         fontName: "20pt Arial",
     });
-
+ 
     //    for(var i=32;i<=1000;++i) console.log(String.fromCharCode(i)+ " - "+i);
-
-
+ 
+ 
     var colorRed = new BABYLON.StandardMaterial("colorRed", scene);
     colorRed.diffuseColor = new BABYLON.Color3(1,0.2,0.2);
-
+ 
     var colorYellow = new BABYLON.StandardMaterial("colorYellow", scene);
     colorYellow.diffuseColor = new BABYLON.Color3(1,1,0.2);
-
+ 
     var colorOrange = new BABYLON.StandardMaterial("colorOrange", scene);
     colorOrange.diffuseColor = new BABYLON.Color3(1,0.6,0.2);
-
+ 
     var power = [];
     var barAmount = 30;
     var currPower = 1;
@@ -194,23 +181,23 @@
     var maxPower = 75;
     var shootReset=false;
     var currentColor;
-
+ 
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
         parent:canvas, x:1685, y:200,
         size: new BABYLON.Size(50, barAmount*distanceRate-80),
         backgroundFill: "#000000FF",
         backgroundRoundRadius: 15,
     });
-
+ 
     for(var i=1; i<=barAmount; i++){
-
+ 
         if(i<=(barAmount*1/3))
             currentColor = "#FFD100FF";
         else if(i<=(barAmount*2/3))
             currentColor = "#FF8700FF";
         else
             currentColor = "#FF0000FF";
-
+ 
         power[i] = new BABYLON.ScreenSpaceCanvas2D(scene, {
             parent:canvas, x:1700, y:i*distanceRate+200,
             size: new BABYLON.Size(25, 10),
@@ -218,47 +205,43 @@
         });
         power[i].levelVisible = false;
     }
-
-
-
+ 
+ 
+ 
     window.onkeydown = function (event){
-        if (!thrown){
-            event = event || window.event;
-            var keyCodeDown = event.which || event.keyCode;
-
-            switch(keyCodeDown)
-            {
-                case 32: // (space)
-                    if(shootReset)
-                    {
-                        shootReset=false;
-                        currPower=1;
-                        rising=true;
-
-                        for(var i=1; i<=barAmount; i++)
-                            power[i].levelVisible = false;
-                    }
-                    shooting = true;
-                    break;
-            }
+        event = event || window.event;
+        var keyCodeDown = event.which || event.keyCode;
+ 
+        switch(keyCodeDown)
+        {
+            case 32: // (space)
+                if(shootReset)
+                {
+                    shootReset=false;
+                    currPower=1;
+                    rising=true;
+ 
+                    for(var i=1; i<=barAmount; i++)
+                        power[i].levelVisible = false;
+                }
+                shooting = true;
+                break;
         }
     }
-
+ 
     window.onkeyup = function (event){
-        if (!thrown){
-            event = event || window.event;
-            var keyCodeUp = event.which || event.keyCode;
-
-            switch(keyCodeUp)
-            {
-                case 32: // (space)
-                    shooting = false;
-                    pressed=true;
-                    break;
-            }
+        event = event || window.event;
+        var keyCodeUp = event.which || event.keyCode;
+ 
+        switch(keyCodeUp)
+        {
+            case 32: // (space)
+                shooting = false;
+                pressed=true;
+                break;
         }
     }
-
+ 
     function bar(){
         if(shooting)
         {
@@ -284,15 +267,15 @@
             }
         }
     }
-
-
+ 
+ 
     //------------------------------------------------------------------------------------------------------------
-
-
-
-
+ 
+ 
+ 
+ 
     // camera.lockedTarget = can2;
-
+ 
     window.ondblclick = function(){
         if (!camControl){
             engine.isPointerLock = true;
@@ -312,61 +295,49 @@
         }
         camControl = !camControl;
     };
-
+ 
     window.addEventListener("mousemove", function(){
-        if (!thrown){
-            var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-
-            // camera.rotationOffset += scene.pointerX/1000;
-            
-
-            console.log("x = "+camera.rotation.x);
-            console.log("y = "+camera.rotation.y);
-            console.log("z = "+camera.rotation.z);
-        }
+        var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+ 
+        // camera.rotationOffset += scene.pointerX/1000;
+ 
+//      console.log(scene.pointerX);
+//      console.log(scene.pointerY);
     });
-
-    function refresh(){
-        
-        console.log("ko");
-    }   
-
+ 
+    function refre(){
+        for(var i=1; i<=3; i++)
+        {
+            if(can[i].position.y <= table2.position.y){
+                score++;
+            }
+        }
+        scoreValue.text = "Score : "+score;
+ 
+    }
+ 
     engine.runRenderLoop(function(){
         bar();
-
-        if (pressed && !thrown){
-            // ball.position.y = Math.sin(camera.rotation.x)*1;
-            // ball.position.x = Math.sin(camera.rotation.y)*5;
-            // ball.position.z = Math.cos(camera.rotation.y)*5;
+ 
+        if (pressed){
             shootingPower = (currPower/barAmount) * maxPower;
-
-            ball.position.y = 5.5;
-            ball.position.x = Math.sin(camera.rotation.y)*5;
-            ball.position.z = Math.cos(camera.rotation.y)*5 + camera.position.z;
-
-            ballDummy.parent = null;
-            exx.alpha = 1;
-            
-
             ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(Math.sin(camera.rotation.y)*shootingPower*1.25,
                                             Math.sin(camera.rotation.x-0.5)*shootingPower*-1.75, Math.cos(camera.rotation.y)*
                                             shootingPower*1.25),
                                             ball.getAbsolutePosition());
-
-
+ 
             pressed = false;
             shootReset = true;
-            thrown = true;
-
+ 
             setTimeout(function(){
-                refresh();
+                refre();
             }, 5000);
         }
-
-
+ 
+ 
         scene.render();
     });
-
+ 
     window.addEventListener("resize", function(){
         engine.resize();
     });
