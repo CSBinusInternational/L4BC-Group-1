@@ -82,6 +82,7 @@
     can[3].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
         0.1});
 
+
     var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
     cross.hasAlpha = true;
 
@@ -304,9 +305,16 @@
 //    	console.log(scene.pointerY);
     });
 
-function refre(){
-    console.log("ko");
-}
+    function refre(){
+        for(var i=1; i<=3; i++)
+        {
+            if(can[i].position.y <= table2.position.y){
+                score++;
+            }
+        }
+        scoreValue.text = "Score : "+score;
+
+    }
 
     engine.runRenderLoop(function(){
         bar();
