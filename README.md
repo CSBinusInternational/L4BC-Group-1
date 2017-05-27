@@ -56,17 +56,16 @@ Assets Needed
 
 - 2D
 	- Textures
--	floor.jpg
--	menu.jpg
--	metal.jpg
--	steel.jpg
--	wall.png
+		-	floor.jpg
+		-	menu.jpg
+		-	metal.jpg
+		-	steel.jpg
+		-	wall.png
 - 3D
 	- Environmental Art Lists
--	Babylon.js box mesh (table, wall, and roof)
--	Babylon.js ground mesh (ground)
--	Babylon.js sphere mesh (ball)
--	Babylon.js cylinder (can)
--	
+		-	Babylon.js box mesh (table, wall, and roof)
+		-	Babylon.js ground mesh (ground)
+		-	Babylon.js sphere mesh (ball)
+		-	Babylon.js cylinder (can)
 - Sound
--	door_1.wav
+	- door_1.wav
