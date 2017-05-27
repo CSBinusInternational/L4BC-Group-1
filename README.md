@@ -1,5 +1,3 @@
-# L4BC-Group-1
-Christopher Lychealdo 1901498422 Steven Muliamin 1901499280  
 Overview
 
  
@@ -16,31 +14,29 @@ The game that we have created is a web-based game developed using the Babylon.js
 To make the game more challenging, we decided not to put any helper, such as a crosshair, so that it is much more similar to the game in real life. We also added lives (3 balls to throw) to create avoid the game from ending so quickly, and also to give the chance to the players to learn the correct camera rotation and power needed to drop all 9 cans.
 
 Core Gameplay Mechanics Brief
-•	Physics: The game uses Cannon.js physics plugin to simulate the gravity, impostor, and impulse (power of the shot).
-•	Trigonometry: The calculation of the impulse uses trigonometry to calculate the power of impulse on a particular rotation of the camera.
-•	Life: The player only has 3 balls for a session of game.
-•	Points: The player gains a point for every can that has been dropped off the table.
-•	Controls: The main controls of the game are:
-Spacebar to initiate a shot
-Left mouse button to gain control of camera and mouse movement to rotate camera.
-R to restart the game.
+- Physics: The game uses Cannon.js physics plugin to simulate the gravity, impostor, and impulse (power of the shot).
+- Trigonometry: The calculation of the impulse uses trigonometry to calculate the power of impulse on a particular rotation of the camera.
+- Life: The player only has 3 balls for a session of game.
+- Points: The player gains a point for every can that has been dropped off the table.
+- Controls: The main controls of the game are:
+	-	Spacebar to initiate a shot
+	-	Left mouse button to gain control of camera and mouse movement to rotate camera.
+	-	R to restart the game.
 Targeted platforms
 Web browser – This game is made to be played on internet browsers.
 Project Scope 
-•	The project took about one and a half months to complete including the mechanics and user interface.
-•	Core team
-o	Christopher Lychealdo 1901498422 + christopher97 (github account)
-- In charge of GUI and game mechanics.
-o	Steven Muliamin 1901499280 + Steven-zz (github account)
-- In charge of GUI, animation, and game mechanics.
-•	Libraries used
--	Babylon.js
--	Cannon.js
--	Hand.js
-•	Programs used during development
--	PHPStorm
--	Sublime Text 3
--	Mozilla Firefox
+- The project took about one and a half months to complete including the mechanics and user interface.
+- Core team
+	-	Christopher Lychealdo 1901498422 + christopher97 (github account) - In charge of GUI and game mechanics.
+	-	Steven Muliamin 1901499280 + Steven-zz (github account) - In charge of GUI, animation, and game mechanics.
+- Libraries used
+	Babylon.js
+	Cannon.js
+	Hand.js
+- Programs used during development
+	PHPStorm
+	Sublime Text 3
+	Mozilla Firefox
 Story and Gameplay
 
 Story 
@@ -66,6 +62,6 @@ Assets Needed
 		-	Babylon.js box mesh (table, wall, and roof)
 		-	Babylon.js ground mesh (ground)
 		-	Babylon.js sphere mesh (ball)
-		-	Babylon.js cylinder (can)
+		-	Babylon.js cylinder (can)	
 - Sound
 	- door_1.wav
