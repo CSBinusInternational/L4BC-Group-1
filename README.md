@@ -3,8 +3,8 @@ Overview
  
 
 Theme / Setting / Genre
-	- Arcade Scoring game
-	- Wooden House setting
+- Arcade Scoring game
+- Wooden House setting
 
 Project Description 
 
