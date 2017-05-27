@@ -75,6 +75,7 @@
     ballDummy.position.y = -1;
     ballDummy.position.z = 5;
 
+    var door = new BABYLON.Sound("door", "assets/audio/door_1.wav", scene);
 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
     var ballMat = new BABYLON.StandardMaterial("ballMat", scene);
@@ -564,7 +565,21 @@
     var tulisan = new BABYLON.Text2D("Press Spacebar to Play!",
         {
             parent: command,
-            fontName: "40pt Forte",
+            fontName: "40pt Lucida Calligraphy",
+            marginAlignment: "h: center, v: center",
+            defaultFontColor: new BABYLON.Color4(0,0,0,1)
+        }
+    );
+
+    var command2 = new BABYLON.Rectangle2D({
+        parent: canvas2, id: "button", x: 525, y: 450, width: 500, height: 100, fill: "#00000000",
+        roundRadius: 10,
+    });
+
+    var tulisan2 = new BABYLON.Text2D("Can Throw Championship",
+        {
+            parent: command2,
+            fontName: "40pt Goudy Stout",
             marginAlignment: "h: center, v: center",
             defaultFontColor: new BABYLON.Color4(0,0,0,1)
         }
@@ -607,7 +622,7 @@
                 tulisan.text = "Your Score : "+score+"\nYou can do better...\n\nPress \"R\" to Play Again";
             else
                 tulisan.text = "Your Score : "+score+"\nI can do that too...\n\nPress \"R\" to Play Again";
-            texture.levelVisible = !texture.levelVisible;
+            // texture.levelVisible = !texture.levelVisible;
             canvas2.levelVisible = !canvas2.levelVisible;
             gameOver = true;
         }
@@ -622,6 +637,7 @@
 
         function moveWallOpen()
         {
+            door.play();
             if(d2.position.x > dummyX)
             {
                 window.setTimeout(function(){
@@ -633,6 +649,7 @@
         }
         function moveWallClose()
         {
+            door.play();
             if(d2.position.x < currentX)
             {
                 window.setTimeout(function(){
@@ -640,6 +657,16 @@
                     d6.position.x -= 0.5;
                     moveWallClose();
                 }, 100);
+            }
+            else{
+                barContainer.levelVisible = true;
+                scoreboard.levelVisible = true;
+                greenBar.levelVisible = true;
+                ballDummy.material.alpha = 1;
+                gameStart=true;
+
+                for(var i=1; i<=ballAmount; i++)
+                    iconBallArr[i].levelVisible = true;
             }
         }
 
@@ -654,15 +681,6 @@
             }
             else
             {
-                barContainer.levelVisible = true;
-                scoreboard.levelVisible = true;
-                greenBar.levelVisible = true;
-                ballDummy.material.alpha = 1;
-                gameStart=true;
-
-                for(var i=1; i<=ballAmount; i++)
-                    iconBallArr[i].levelVisible = true;
-
                 moveWallClose();
             }
         }
