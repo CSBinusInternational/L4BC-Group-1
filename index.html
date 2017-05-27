@@ -162,22 +162,22 @@
 
  
  
-    var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
-    cross.hasAlpha = true;
- 
-    var canvas1 = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ScreenCanvas", x:canvas.clientWidth/2+(8.072916/100*canvas.clientWidth), y:canvas.clientHeight/2+(6.6/100*canvas.clientHeight),
-        size: new BABYLON.Size(100, 100),
-        // backgroundFill: "#5b5b5b8F",
-        // backgroundRoundRadius: 50,
-        children: [
-            new BABYLON.Sprite2D(cross, {
-                id: "cross",
-                marginAlignment: "h: center, v:center",
-                scale: 0.045
-            })
-        ]
-    });
+//    var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
+//    cross.hasAlpha = true;
+//
+//    var canvas1 = new BABYLON.ScreenSpaceCanvas2D(scene, {
+//        id: "ScreenCanvas", x:canvas.clientWidth/2+(8.072916/100*canvas.clientWidth), y:canvas.clientHeight/2+(6.6/100*canvas.clientHeight),
+//        size: new BABYLON.Size(100, 100),
+//        // backgroundFill: "#5b5b5b8F",
+//        // backgroundRoundRadius: 50,
+//        children: [
+//            new BABYLON.Sprite2D(cross, {
+//                id: "cross",
+//                marginAlignment: "h: center, v:center",
+//                scale: 0.045
+//            })
+//        ]
+//    });
 
     var pressed = false;
     var score=0;
@@ -340,14 +340,14 @@
     iconBall.hasAlpha = true;
 
     greenBar = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ballHUD", parent:canvas, x:screenW-1420, y:screenH+75,
+        id: "ballHUD", parent:canvas, x:screenW-(96/100*screenW), y:screenH+(9.4/100*screenH),
         size: new BABYLON.Size(150, 5),
         backgroundFill: "#00FF00FF",
         backgroundRoundRadius: 2,
     });
 
     redBar = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ballHUD", parent:canvas, x:screenW-1420, y:screenH+75,
+        id: "ballHUD", parent:canvas, x:screenW-(96/100*screenW), y:screenH+(9.4/100*screenH),
         size: new BABYLON.Size(150, 5),
         backgroundFill: "#FF0000FF",
         backgroundRoundRadius: 2,
@@ -359,7 +359,7 @@
     for(var i=1; i<=ballAmount; i++)
     {
         iconBallArr[i] = new BABYLON.ScreenSpaceCanvas2D(scene, {
-            id: "ballHUD", parent:canvas, x:screenW-1450+((i-1)*60), y:screenH+60,
+            id: "ballHUD", parent:canvas, x:screenW-(98/100*screenW)+((i-1)*60), y:screenH+(7.5/100*screenH),
             size: new BABYLON.Size(100, 100),
             backgroundFill: "#40404000",
             backgroundRoundRadius: 25,
@@ -380,14 +380,10 @@
     var parallelArr = [];
     for(var i=1; i<=9; i++)
         parallelArr[i]=false;
-
-
-
-    console.log(screenH+" "+screenW);
  
  
     var scoreboard = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ScreenCanvas", parent:canvas, x:screenW+26, y:screenH+50,
+        id: "ScreenCanvas", parent:canvas, x:screenW+(1.75/100*screenW), y:screenH+(6.3/100*screenH),
         size: new BABYLON.Size(250, 100),
         backgroundFill: "#4040408F",
         backgroundRoundRadius: 25,
@@ -399,6 +395,10 @@
         marginAlignment: "h: center, v:center",
         fontName: "20pt Arial",
     });
+
+//    var ww = 1450/screenW*100;
+//    var hh = 60/screenH*100;
+//    console.log(ww+" "+hh+" "+scoreboard.y)
  
     //    for(var i=32;i<=1000;++i) console.log(String.fromCharCode(i)+ " - "+i);
  
@@ -424,7 +424,7 @@
     var currentColor;
  
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        parent:canvas, x:screenW+250, y:200,
+        parent:canvas, x:screenW+(16.9/100*screenW), y:200,
         size: new BABYLON.Size(50, barAmount*distanceRate-80),
         backgroundFill: "#000000FF",
         backgroundRoundRadius: 15,
