@@ -65,6 +65,8 @@
     // box.position.y = -2;
 
     var gameStart = false;
+    var gameOver = false;
+    var begin = false;
 
     var thrown = false;
     var ballDummy = BABYLON.Mesh.CreateSphere("wd", 50, 2, scene);
@@ -468,44 +470,6 @@
         });
         power[i].levelVisible = false;
     }
- 
- 
-
-         window.onkeydown = function (event){
-            if(gameStart)
-            {
-                if (!thrown){
-                    event = event || window.event;
-                    var keyCodeDown = event.which || event.keyCode;
-
-                    switch(keyCodeDown)
-                    {
-                        case 32: // (space)
-
-                            shooting = true;
-                            break;
-                    }
-                }
-            }
-         }
-
-         window.onkeyup = function (event){
-             if(gameStart)
-             {
-                 if (!thrown){
-                     event = event || window.event;
-                     var keyCodeUp = event.which || event.keyCode;
-
-                     switch(keyCodeUp)
-                     {
-                         case 32: // (space)
-                             shooting = false;
-                             pressed=true;
-                             break;
-                     }
-                 }
-             }
-         }
 
 
     function bar(){
@@ -541,40 +505,70 @@
  
     // camera.lockedTarget = can2;
 
-         window.ondblclick = function(){
-            if(gameStart)
-            {
-                if (!camControl){
-                    engine.isPointerLock = true;
-                    camera.attachControl(canvas, false);
-                    canvas.requestPointerLock = canvas.requestPointerLock ||
-                        canvas.mozRequestPointerLock ||
-                        canvas.webkitRequestPointerLock;
-                    canvas.requestPointerLock();
-                }
-                else{
-                    engine.isPointerLock = false;
-                    camera.detachControl(canvas);
-                    document.exitPointerLock = document.exitPointerLock ||
-                        document.mozExitPointerLock ||
-                        document.webkitExitPointerLock;
-                    document.exitPointerLock();
-                }
-                camControl = !camControl;
+     window.ondblclick = function(){
+        if(gameStart)
+        {
+            if (!camControl){
+                engine.isPointerLock = true;
+                camera.attachControl(canvas, false);
+                canvas.requestPointerLock = canvas.requestPointerLock ||
+                    canvas.mozRequestPointerLock ||
+                    canvas.webkitRequestPointerLock;
+                canvas.requestPointerLock();
             }
-         };
+            else{
+                engine.isPointerLock = false;
+                camera.detachControl(canvas);
+                document.exitPointerLock = document.exitPointerLock ||
+                    document.mozExitPointerLock ||
+                    document.webkitExitPointerLock;
+                document.exitPointerLock();
+            }
+            camControl = !camControl;
+        }
+     };
 
-         window.addEventListener("mousemove", function(){
-             var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+     window.addEventListener("mousemove", function(){
+         var pickResult = scene.pick(scene.pointerX, scene.pointerY);
 
-             // camera.rotationOffset += scene.pointerX/1000;
+         // camera.rotationOffset += scene.pointerX/1000;
 
-//      console.log(scene.pointerX);
-//      console.log(scene.pointerY);
-         });
+        //      console.log(scene.pointerX);
+        //      console.log(scene.pointerY);
+     });
 
+    // ------------------------------------------ M E N U -----------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------
+        
+    var size = document.getElementById("myCanvas");
+    var canvas2 = new BABYLON.ScreenSpaceCanvas2D(scene,{
+        id: "cameraCanvas",
+        backgroundFill: "#00000000"
+    });
 
+    var texture = new BABYLON.Texture("assets/images/menu.jpg", scene);
+    texture.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE;
+    texture.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
+    var sprite = new BABYLON.Sprite2D(texture, {
+        parent: canvas2,
+        id: "menu",
+        marginAlignment: "h: center, v: center",
+        scale:"0.75"
+    });
 
+    var command = new BABYLON.Rectangle2D({
+        parent: canvas2, id: "button", x: 525, y: 250, width: 500, height: 100, fill: "#00000000",
+        roundRadius: 10,
+    });
+
+    var tulisan = new BABYLON.Text2D("Press Spacebar to Play!",
+        {
+            parent: command,
+            fontName: "40pt Forte",
+            marginAlignment: "h: center, v: center",
+            defaultFontColor: new BABYLON.Color4(0,0,0,1)
+        }
+    );
 
     function refresh(){
         for(var i=1; i<=9; i++)
@@ -605,10 +599,23 @@
 
             ballDummy.parent = camera;
         }
+        else{
+            console.log("panggil");
+            if (score < 5)
+                tulisan.text = "Your Score : "+score+"\nPathetic...\n\nPress \"R\" to Play Again";
+            else if (score < 9)
+                tulisan.text = "Your Score : "+score+"\nYou can do better...\n\nPress \"R\" to Play Again";
+            else
+                tulisan.text = "Your Score : "+score+"\nI can do that too...\n\nPress \"R\" to Play Again";
+            texture.levelVisible = !texture.levelVisible;
+            canvas2.levelVisible = !canvas2.levelVisible;
+            gameOver = true;
+        }
     }
 
     function start()
     {
+        begin = true;
         var openSpace = 20;
         var dummyX = d2.position.x - openSpace;
         var currentX = d2.position.x;
@@ -663,8 +670,46 @@
         moveWallOpen();
         moveCamera();
     }
-    start();
 
+    window.onkeydown = function (event){
+        event = event || window.event;
+        var keyCodeDown = event.which || event.keyCode;
+        switch(keyCodeDown)
+        {
+            case 32: // (space)
+                if (!begin){
+                    texture.levelVisible = !texture.levelVisible;
+                    canvas2.levelVisible = !canvas2.levelVisible;
+                    start();
+                }
+                else{
+                    if (gameStart && !thrown){  
+                       shooting = true;
+                    }
+                }
+                break;
+            case 82:
+                if (gameOver)
+                    location.reload();
+        }
+    }
+
+    window.onkeyup = function (event){
+        event = event || window.event;
+        var keyCodeUp = event.which || event.keyCode;
+        if(gameStart)
+        {
+            if (!thrown){
+                switch(keyCodeUp)
+                {
+                    case 32: // (space)
+                        shooting = false;
+                        pressed=true;
+                        break;
+                }
+            }
+        }
+    }
  
     engine.runRenderLoop(function(){
         if(ballAmount>0)
