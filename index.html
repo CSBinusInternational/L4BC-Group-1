@@ -28,7 +28,7 @@
     var screenW = window.innerWidth;
     var screenH = window.innerHeight;
  
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -10), scene);
+    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -200), scene);
     var inputManager = camera.inputs;
     inputManager.clear();
     camera.inputs.addMouse();
@@ -64,6 +64,8 @@
     // box.parent = camera;
     // box.position.y = -2;
 
+    var gameStart = false;
+
     var thrown = false;
     var ballDummy = BABYLON.Mesh.CreateSphere("wd", 50, 2, scene);
     ballDummy.position.y = -100;
@@ -76,8 +78,14 @@
     var ballMat = new BABYLON.StandardMaterial("ballMat", scene);
     ballMat.specularColor = new BABYLON.Color3(0,0,0);
     ballMat.diffuseColor = new BABYLON.Color3(0.7,0.7,0.7);
-    ball.material = ballMat;
+
+    var ballMat2 = new BABYLON.StandardMaterial("ballMat", scene);
+    ballMat2.specularColor = new BABYLON.Color3(0,0,0);
+    ballMat2.diffuseColor = new BABYLON.Color3(0.7,0.7,0.7);
+
+    ball.material = ballMat2;
     ballDummy.material = ballMat;
+    ballDummy.material.alpha = 0;
 
     ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 9, friction: 5, restitution:
                         1});
@@ -225,7 +233,7 @@
         //wall to stop ball from moving
     var w1 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
     w1.position.z = 5;
-    w1.position.y = -40;
+    w1.position.y = -4000;
     w1.position.x = -5;
     w1.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
         0.0});
@@ -235,7 +243,7 @@
         0.0});
     w2.position.z = w1.position.z;
     w2.position.y = w1.position.y + 1.5;
-    w2.position.x = w1.position.x - 1.6;
+    w2.position.x = w1.position.x - 1.7;
 
 
     var w3 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
@@ -243,13 +251,13 @@
         0.0});
     w3.position.z = w1.position.z;
     w3.position.y = w1.position.y + 1.5;
-    w3.position.x = w1.position.x + 1.6;
+    w3.position.x = w1.position.x + 1.7;
 
 
     var w4 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
     w4.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
         0.0});
-    w4.position.z = w1.position.z - 1.6;
+    w4.position.z = w1.position.z - 1.7;
     w4.position.y = w1.position.y + 1.5;
     w4.position.x = w1.position.x;
 
@@ -257,7 +265,7 @@
     var w5 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
     w5.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
         0.0});
-    w5.position.z = w1.position.z + 1.6;
+    w5.position.z = w1.position.z + 1.7;
     w5.position.y = w1.position.y + 1.5;
     w5.position.x = w1.position.x;
 
@@ -291,13 +299,23 @@
         0.0});
 
     var d2 = BABYLON.Mesh.CreateBox("box", 1, scene);
-    d2.position.x = ground.position.x;
-    d2.scaling.x = ground.scaling.x;
+    d2.scaling.x = ground.scaling.x/2;
     d2.scaling.y = ground.scaling.x*0.4;
+    d2.position.x = ground.position.x - ground.scaling.x/2 + d2.scaling.x/2;
     d2.position.y = ground.position.y + d2.scaling.y/2;
     d2.position.z = ground.position.z - ground.scaling.z/2 - d2.scaling.z/2;
     d2.material = wood;
     d2.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+
+    var d6 = BABYLON.Mesh.CreateBox("box", 1, scene);
+    d6.scaling.x = ground.scaling.x/2;
+    d6.scaling.y = ground.scaling.x*0.4;
+    d6.position.x = ground.position.x + ground.scaling.x/2 - d6.scaling.x/2;
+    d6.position.y = ground.position.y + d6.scaling.y/2;
+    d6.position.z = ground.position.z - ground.scaling.z/2 - d6.scaling.z/2;
+    d6.material = wood;
+    d6.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
         0.0});
 
     var d3 = BABYLON.Mesh.CreateBox("box", 1, scene);
@@ -353,6 +371,7 @@
         backgroundRoundRadius: 2,
     });
     redBar.levelVisible = false;
+    greenBar.levelVisible = false;
 
     var iconBallArr = [];
 
@@ -370,6 +389,7 @@
             marginAlignment: "h: center, v:center",
             scale: 0.03
         });
+        iconBallArr[i].levelVisible = false;
     }
         //---------------------------------------------------------------------------------------------------------
 
@@ -388,6 +408,7 @@
         backgroundFill: "#4040408F",
         backgroundRoundRadius: 25,
     });
+    scoreboard.levelVisible = false;
  
     var scoreValue = new BABYLON.Text2D("Score : "+score, {
         parent : scoreboard,
@@ -420,7 +441,7 @@
     var distanceRate = 17;
     var shooting = false;
     var shootingPower;
-    var maxPower = 150;
+    var maxPower = 170;
     var currentColor;
  
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
@@ -429,6 +450,7 @@
         backgroundFill: "#000000FF",
         backgroundRoundRadius: 15,
     });
+    barContainer.levelVisible = false;
  
     for(var i=1; i<=barAmount; i++){
  
@@ -448,37 +470,44 @@
     }
  
  
- 
-    window.onkeydown = function (event){
-        if (!thrown){
-            event = event || window.event;
-            var keyCodeDown = event.which || event.keyCode;
 
-            switch(keyCodeDown)
+         window.onkeydown = function (event){
+            if(gameStart)
             {
-                case 32: // (space)
-                   
-                    shooting = true;
-                    break;
-            }
-        }
-    }
+                if (!thrown){
+                    event = event || window.event;
+                    var keyCodeDown = event.which || event.keyCode;
 
-    window.onkeyup = function (event){
-        if (!thrown){
-            event = event || window.event;
-            var keyCodeUp = event.which || event.keyCode;
+                    switch(keyCodeDown)
+                    {
+                        case 32: // (space)
 
-            switch(keyCodeUp)
-            {
-                case 32: // (space)
-                    shooting = false;
-                    pressed=true;
-                    break;
+                            shooting = true;
+                            break;
+                    }
+                }
             }
-        }
-    }
- 
+         }
+
+         window.onkeyup = function (event){
+             if(gameStart)
+             {
+                 if (!thrown){
+                     event = event || window.event;
+                     var keyCodeUp = event.which || event.keyCode;
+
+                     switch(keyCodeUp)
+                     {
+                         case 32: // (space)
+                             shooting = false;
+                             pressed=true;
+                             break;
+                     }
+                 }
+             }
+         }
+
+
     function bar(){
         if(shooting)
         {
@@ -508,39 +537,43 @@
  
     //------------------------------------------------------------------------------------------------------------
  
- 
- 
+
  
     // camera.lockedTarget = can2;
- 
-    window.ondblclick = function(){
-        if (!camControl){
-            engine.isPointerLock = true;
-            camera.attachControl(canvas, false);
-            canvas.requestPointerLock = canvas.requestPointerLock ||
-                canvas.mozRequestPointerLock ||
-                canvas.webkitRequestPointerLock;
-            canvas.requestPointerLock();
-        }
-        else{
-            engine.isPointerLock = false;
-            camera.detachControl(canvas);
-            document.exitPointerLock = document.exitPointerLock ||
-                document.mozExitPointerLock ||
-                document.webkitExitPointerLock;
-            document.exitPointerLock();
-        }
-        camControl = !camControl;
-    };
- 
-    window.addEventListener("mousemove", function(){
-        var pickResult = scene.pick(scene.pointerX, scene.pointerY);
- 
-        // camera.rotationOffset += scene.pointerX/1000;
- 
+
+         window.ondblclick = function(){
+            if(gameStart)
+            {
+                if (!camControl){
+                    engine.isPointerLock = true;
+                    camera.attachControl(canvas, false);
+                    canvas.requestPointerLock = canvas.requestPointerLock ||
+                        canvas.mozRequestPointerLock ||
+                        canvas.webkitRequestPointerLock;
+                    canvas.requestPointerLock();
+                }
+                else{
+                    engine.isPointerLock = false;
+                    camera.detachControl(canvas);
+                    document.exitPointerLock = document.exitPointerLock ||
+                        document.mozExitPointerLock ||
+                        document.webkitExitPointerLock;
+                    document.exitPointerLock();
+                }
+                camControl = !camControl;
+            }
+         };
+
+         window.addEventListener("mousemove", function(){
+             var pickResult = scene.pick(scene.pointerX, scene.pointerY);
+
+             // camera.rotationOffset += scene.pointerX/1000;
+
 //      console.log(scene.pointerX);
 //      console.log(scene.pointerY);
-    });
+         });
+
+
 
 
     function refresh(){
@@ -573,6 +606,65 @@
             ballDummy.parent = camera;
         }
     }
+
+    function start()
+    {
+        var openSpace = 20;
+        var dummyX = d2.position.x - openSpace;
+        var currentX = d2.position.x;
+
+        function moveWallOpen()
+        {
+            if(d2.position.x > dummyX)
+            {
+                window.setTimeout(function(){
+                    d2.position.x -= 0.5;
+                    d6.position.x += 0.5;
+                    moveWallOpen();
+                }, 100);
+            }
+        }
+        function moveWallClose()
+        {
+            if(d2.position.x < currentX)
+            {
+                window.setTimeout(function(){
+                    d2.position.x += 0.5;
+                    d6.position.x -= 0.5;
+                    moveWallClose();
+                }, 100);
+            }
+        }
+
+        function moveCamera()
+        {
+            if(camera.position.z < -10)
+            {
+                window.setTimeout(function(){
+                    camera.position.z += 2;
+                    moveCamera();
+                }, 100);
+            }
+            else
+            {
+                barContainer.levelVisible = true;
+                scoreboard.levelVisible = true;
+                greenBar.levelVisible = true;
+                ballDummy.material.alpha = 1;
+                gameStart=true;
+
+                for(var i=1; i<=ballAmount; i++)
+                    iconBallArr[i].levelVisible = true;
+
+                moveWallClose();
+            }
+        }
+
+        moveWallOpen();
+        moveCamera();
+    }
+    start();
+
  
     engine.runRenderLoop(function(){
         if(ballAmount>0)
