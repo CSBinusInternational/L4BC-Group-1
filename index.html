@@ -33,15 +33,22 @@
     inputManager.clear();
     camera.inputs.addMouse();
  
-    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0,15,-10), scene);
-    light.intensity = 0.7;
+    var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0,10,-7), scene);
+    light.intensity = 0.75;
+
+    var light2 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(17,1,17), scene);
+    light2.intensity = 0.5;
+
+    var light3 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-17,1,17), scene);
+    light3.intensity = 0.5;
+
  
-    var ground = BABYLON.Mesh.CreateGround("ground1", 12,12,2, scene);
+    var ground = BABYLON.Mesh.CreateGround("ground1", 1,1,1, scene);
     var matGround = new BABYLON.StandardMaterial("tex", scene);
     ground.material = matGround;
-//    ground.material.diffuseTexture = new BABYLON.Texture("grass.jpg", scene);
-    ground.scaling.x = 10;
-    ground.scaling.z = 10;
+    ground.material.diffuseTexture = new BABYLON.Texture("assets/images/floor.jpg", scene);
+    ground.scaling.x = 108;
+    ground.scaling.z = 108;
     ground.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution:
                                 0});
  
@@ -52,12 +59,6 @@
     var steel = new BABYLON.StandardMaterial("steel", scene);
     steel.diffuseTexture = new BABYLON.Texture("assets/images/steel.jpg", scene);
     steel.specularColor = new BABYLON.Color3(1,1,1);
-
-    var cola = new BABYLON.StandardMaterial("cola", scene);
-    cola.diffuseTexture = new BABYLON.Texture("assets/models/can/bonus/cokecan.jpg", scene);
-    cola.specularColor = new BABYLON.Color3(1,1,1);
- 
-
 
     // var box = BABYLON.Mesh.CreateBox("box", 1, scene);
     // box.parent = camera;
@@ -72,8 +73,13 @@
 
 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
+    var ballMat = new BABYLON.StandardMaterial("ballMat", scene);
+    ballMat.specularColor = new BABYLON.Color3(0,0,0);
+    ballMat.diffuseColor = new BABYLON.Color3(0.7,0.7,0.7);
+    ball.material = ballMat;
+    ballDummy.material = ballMat;
 
-    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 5, friction: 5, restitution:
+    ball.setPhysicsState({impostor: BABYLON.PhysicsEngine.SphereImpostor, mass: 9, friction: 5, restitution:
                         1});
     ball.position.y = 2;
     ball.position.z = 5;
@@ -81,77 +87,77 @@
     var can=[];
  
     // middle can
-    can[1] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can[1] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 75, 1, scene);
     can[1].position.z = 17;
     can[1].position.x = -1.26;
     can[1].position.y = 6.5;
-    can[1].material = cola;
-    can[1].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[1].material = metal;
+    can[1].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
                         0.1});
  
-    can[2] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can[2] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 75, 1, scene);
     can[2].position.z = 17;
     can[2].position.x = 1.26;
     can[2].position.y = 6.5;
-    can[2].material = cola;
-    can[2].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[2].material = metal;
+    can[2].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
                         0.1});
  
-    can[3] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can[3] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 75, 1, scene);
     can[3].position.z = 17;
     can[3].position.y = 11;
     can[3].material = metal;
-    can[3].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[3].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
         0.1});
 
     // left can
-    can[4] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can[4] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 75, 1, scene);
     can[4].position.z = 17;
     can[4].position.x = -12.26;
     can[4].position.y = 6.5;
-    can[4].material = cola;
-    can[4].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[4].material = metal;
+    can[4].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
                         0.1});
  
-    can[5] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can[5] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 75, 1, scene);
     can[5].position.z = 17;
     can[5].position.x = -9.76;
     can[5].position.y = 6.5;
-    can[5].material = cola;
-    can[5].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[5].material = metal;
+    can[5].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
                         0.1});
  
-    can[6] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can[6] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 75, 1, scene);
     can[6].position.z = 17;
     can[6].position.x = -11.26;
     can[6].position.y = 11;
     can[6].material = metal;
-    can[6].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[6].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
         0.1});
 
     // right can
-    can[7] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 150, 1, scene);
+    can[7] = BABYLON.Mesh.CreateCylinder("cylinder", 3, 2.5, 2.5, 75, 1, scene);
     can[7].position.z = 17;
     can[7].position.x = 9.76;
     can[7].position.y = 6.5;
-    can[7].material = cola;
-    can[7].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[7].material = metal;
+    can[7].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
                         0.1});
  
-    can[8] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 150, 1, scene);
+    can[8] = BABYLON.Mesh.CreateCylinder("cylinder1", 3, 2.5, 2.5, 75, 1, scene);
     can[8].position.z = 17;
     can[8].position.x = 12.26;
     can[8].position.y = 6.5;
-    can[8].material = cola;
-    can[8].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[8].material = metal;
+    can[8].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
                         0.1});
  
-    can[9] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 150, 1, scene);
+    can[9] = BABYLON.Mesh.CreateCylinder("cylinder2", 3, 2.5, 2.5, 75, 1, scene);
     can[9].position.z = 17;
     can[9].position.x = 11;
     can[9].position.y = 11;
     can[9].material = metal;
-    can[9].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 2, friction: 5, restitution:
+    can[9].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
         0.1});
 
  
@@ -160,7 +166,7 @@
     cross.hasAlpha = true;
  
     var canvas1 = new BABYLON.ScreenSpaceCanvas2D(scene, {
-        id: "ScreenCanvas", x:canvas.clientWidth/2+124, y:canvas.clientHeight/2+50,
+        id: "ScreenCanvas", x:canvas.clientWidth/2+(8.072916/100*canvas.clientWidth), y:canvas.clientHeight/2+(6.6/100*canvas.clientHeight),
         size: new BABYLON.Size(100, 100),
         // backgroundFill: "#5b5b5b8F",
         // backgroundRoundRadius: 50,
@@ -172,7 +178,7 @@
             })
         ]
     });
- 
+
     var pressed = false;
     var score=0;
  
@@ -267,6 +273,63 @@
     ball.position.z = w1.position.z;
     ball.position.y = w1.position.y+1.7;
 
+    //------------------------------------- WALL --------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------
+
+    var wood = new BABYLON.StandardMaterial("wood", scene);
+    wood.diffuseTexture = new BABYLON.Texture("assets/images/wall.png", scene);
+    wood.specularColor = new BABYLON.Color3(1,1,1);
+
+    var d1 = BABYLON.Mesh.CreateBox("box", 1, scene);
+    d1.position.x = ground.position.x;
+    d1.scaling.x = ground.scaling.x;
+    d1.scaling.y = ground.scaling.x*0.4;
+    d1.position.y = ground.position.y + d1.scaling.y/2;
+    d1.position.z = ground.position.z + ground.scaling.z/2 + d1.scaling.z/2;
+    d1.material = wood;
+    d1.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+
+    var d2 = BABYLON.Mesh.CreateBox("box", 1, scene);
+    d2.position.x = ground.position.x;
+    d2.scaling.x = ground.scaling.x;
+    d2.scaling.y = ground.scaling.x*0.4;
+    d2.position.y = ground.position.y + d2.scaling.y/2;
+    d2.position.z = ground.position.z - ground.scaling.z/2 - d2.scaling.z/2;
+    d2.material = wood;
+    d2.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+
+    var d3 = BABYLON.Mesh.CreateBox("box", 1, scene);
+    d3.position.x = ground.position.x - ground.scaling.x/2 - d3.scaling.z/2;
+    d3.scaling.x = ground.scaling.x;
+    d3.scaling.y = ground.scaling.x*0.4;
+    d3.position.y = ground.position.y + d3.scaling.y/2;
+    d3.position.z = ground.position.z;
+    d3.rotation.y = Math.PI/2;
+    d3.material = wood;
+    d3.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+
+    var d4 = BABYLON.Mesh.CreateBox("box", 1, scene);
+    d4.position.x = ground.position.x + ground.scaling.x/2 + d4.scaling.z/2;
+    d4.scaling.x = ground.scaling.x;
+    d4.scaling.y = ground.scaling.x*0.4;
+    d4.position.y = ground.position.y + d4.scaling.y/2;
+    d4.position.z = ground.position.z;
+    d4.rotation.y = Math.PI/2;
+    d4.material = wood;
+    d4.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
+
+    var d5 = BABYLON.Mesh.CreateBox("box", 1, scene);
+    d5.scaling.z = ground.scaling.z;
+    d5.scaling.x = ground.scaling.x;
+    d5.position.y = d1.scaling.y;
+    d5.material = wood;
+    d5.backFaceCulling = false;
+    d5.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 10, restitution:
+        0.0});
 
     //---------------------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------------------
@@ -357,8 +420,7 @@
     var distanceRate = 17;
     var shooting = false;
     var shootingPower;
-    var maxPower = 75;
-    var shootReset=false;
+    var maxPower = 150;
     var currentColor;
  
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
@@ -395,15 +457,7 @@
             switch(keyCodeDown)
             {
                 case 32: // (space)
-                    if(shootReset)
-                    {
-                        shootReset=false;
-                        currPower=1;
-                        rising=true;
-
-                        for(var i=1; i<=barAmount; i++)
-                            power[i].levelVisible = false;
-                    }
+                   
                     shooting = true;
                     break;
             }
@@ -504,6 +558,13 @@
         ball.position.z = w1.position.z;
         ball.position.y = w1.position.y+1.7;
 
+
+        currPower=1;
+        rising=true;
+
+        for(var i=1; i<=barAmount; i++)
+            power[i].levelVisible = false;
+
         if(ballAmount>0)
         {
             greenBar.levelVisible = true;
@@ -531,13 +592,12 @@
 
 
                 ball.physicsImpostor.applyImpulse(new BABYLON.Vector3(Math.sin(camera.rotation.y)*shootingPower*1.25,
-                        Math.sin(camera.rotation.x-0.5)*shootingPower*-1.75, Math.cos(camera.rotation.y)*
+                        Math.sin(camera.rotation.x-0.5)*(shootingPower-25)*-1.75, Math.cos(camera.rotation.y)*
                         shootingPower*1.25),
                     ball.getAbsolutePosition());
 
 
                 pressed = false;
-                shootReset = true;
                 thrown = true;
                 greenBar.levelVisible = false;
                 redBar.levelVisible = true;
