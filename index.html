@@ -27,7 +27,17 @@
     //get window size of client(user)
     var screenW = window.innerWidth;
     var screenH = window.innerHeight;
+
+    // game state variables
+    var gameStart = false;
+    var gameOver = false;
+    var begin = false;
+    var thrown = false;
+    var pressed = false;
+    var score=0;
  
+    // --------------------------- camera and light setting ------------------------------------
+
     var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 7, -200), scene);
     var inputManager = camera.inputs;
     inputManager.clear();
@@ -42,7 +52,9 @@
     var light3 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-17,1,17), scene);
     light3.intensity = 0.5;
 
+    // -----------------------------------------------------------------------------------------
  
+    // -------------------------------- Ground setting -----------------------------------------
     var ground = BABYLON.Mesh.CreateGround("ground1", 1,1,1, scene);
     var matGround = new BABYLON.StandardMaterial("tex", scene);
     ground.material = matGround;
@@ -51,7 +63,13 @@
     ground.scaling.z = 108;
     ground.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 0.5, restitution:
                                 0});
+
+    // -----------------------------------------------------------------------------------------
  
+    // import sound
+    var door = new BABYLON.Sound("door", "assets/audio/door_1.wav", scene);
+
+    // import images for texture
     var metal = new BABYLON.StandardMaterial("metal", scene);
     metal.diffuseTexture = new BABYLON.Texture("assets/images/metal.jpg", scene);
     metal.specularColor = new BABYLON.Color3(1,1,1);
@@ -60,22 +78,20 @@
     steel.diffuseTexture = new BABYLON.Texture("assets/images/steel.jpg", scene);
     steel.specularColor = new BABYLON.Color3(1,1,1);
 
-    // var box = BABYLON.Mesh.CreateBox("box", 1, scene);
-    // box.parent = camera;
-    // box.position.y = -2;
+    var wood = new BABYLON.StandardMaterial("wood", scene);
+    wood.diffuseTexture = new BABYLON.Texture("assets/images/wall.png", scene);
+    wood.specularColor = new BABYLON.Color3(1,1,1);
 
-    var gameStart = false;
-    var gameOver = false;
-    var begin = false;
+    // -----------------------------------------------------------------------------------------
 
-    var thrown = false;
+    // ------------------------------------- B A L L -------------------------------------------
+
     var ballDummy = BABYLON.Mesh.CreateSphere("wd", 50, 2, scene);
     ballDummy.position.y = -100;
     ballDummy.parent = camera;
     ballDummy.position.y = -1;
     ballDummy.position.z = 5;
 
-    var door = new BABYLON.Sound("door", "assets/audio/door_1.wav", scene);
 
     var ball = BABYLON.Mesh.CreateSphere("sphere", 50, 2, scene);
     var ballMat = new BABYLON.StandardMaterial("ballMat", scene);
@@ -94,6 +110,11 @@
                         1});
     ball.position.y = 2;
     ball.position.z = 5;
+
+    // -----------------------------------------------------------------------------------------
+
+
+    // ----------------------------------------- C A N -----------------------------------------
  
     var can=[];
  
@@ -171,30 +192,11 @@
     can[9].setPhysicsState({impostor: BABYLON.PhysicsEngine.CylinderImpostor, mass: 3, friction: 5, restitution:
         0.1});
 
- 
- 
-//    var cross = new BABYLON.Texture("assets/images/crosshair.png", scene);
-//    cross.hasAlpha = true;
-//
-//    var canvas1 = new BABYLON.ScreenSpaceCanvas2D(scene, {
-//        id: "ScreenCanvas", x:canvas.clientWidth/2+(8.072916/100*canvas.clientWidth), y:canvas.clientHeight/2+(6.6/100*canvas.clientHeight),
-//        size: new BABYLON.Size(100, 100),
-//        // backgroundFill: "#5b5b5b8F",
-//        // backgroundRoundRadius: 50,
-//        children: [
-//            new BABYLON.Sprite2D(cross, {
-//                id: "cross",
-//                marginAlignment: "h: center, v:center",
-//                scale: 0.045
-//            })
-//        ]
-//    });
+    // --------------------------------------------------------------------------------------------------------
 
-    var pressed = false;
-    var score=0;
  
-    //---------------------------------------------------------------------------------------------------------
-    //table
+    // --------------------------------------------------------------------------------------------------------
+    // -----------------------------------------  table  ------------------------------------------------------
  
     var table1 = BABYLON.Mesh.CreateBox("table1", 1, scene);
     table1.position.x = -14.5;
@@ -226,14 +228,11 @@
     table3.setPhysicsState({impostor: BABYLON.PhysicsEngine.BoxImpostor, mass: 0, friction: 5, restitution:
         0.1});
  
- 
- 
- 
     //---------------------------------------------------------------------------------------------------------
-    // Tambahan gw
 
-    //---------------------------------------------------------------------------------------------------------
-        //wall to stop ball from moving
+
+    // --------------------------------------------------------------------------------------------------------
+    // -------------------------------------- wall to stop ball from moving -----------------------------------
     var w1 = BABYLON.Mesh.CreateBox("sphere", 1, scene);
     w1.position.z = 5;
     w1.position.y = -4000;
@@ -284,12 +283,8 @@
     ball.position.z = w1.position.z;
     ball.position.y = w1.position.y+1.7;
 
-    //------------------------------------- WALL --------------------------------------------------------------
+    //---------------------------------------------- WALL -----------------------------------------------------
     //---------------------------------------------------------------------------------------------------------
-
-    var wood = new BABYLON.StandardMaterial("wood", scene);
-    wood.diffuseTexture = new BABYLON.Texture("assets/images/wall.png", scene);
-    wood.specularColor = new BABYLON.Color3(1,1,1);
 
     var d1 = BABYLON.Mesh.CreateBox("box", 1, scene);
     d1.position.x = ground.position.x;
@@ -354,7 +349,8 @@
 
     //---------------------------------------------------------------------------------------------------------
     //---------------------------------------------------------------------------------------------------------
-        //ball amount & HUD
+    
+    // ----------------------------------------  ball amount & indicator  -------------------------------------
     var ballAmount = 3;
 
     var iconBall = new BABYLON.Texture("assets/images/iconBall.png", scene);
@@ -394,17 +390,19 @@
         });
         iconBallArr[i].levelVisible = false;
     }
-        //---------------------------------------------------------------------------------------------------------
+    
+    // ---------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------------------
 
 
-
-
-    //parallel array to can
+    // ---------------------------------------  parallel array to can  -----------------------------------------
     var parallelArr = [];
     for(var i=1; i<=9; i++)
         parallelArr[i]=false;
- 
- 
+    //----------------------------------------------------------------------------------------------------------
+
+
+    // ---------------------------------------------- scoreboard -----------------------------------------------
     var scoreboard = new BABYLON.ScreenSpaceCanvas2D(scene, {
         id: "ScreenCanvas", parent:canvas, x:screenW+(1.75/100*screenW), y:screenH+(6.3/100*screenH),
         size: new BABYLON.Size(250, 100),
@@ -419,12 +417,10 @@
         marginAlignment: "h: center, v:center",
         fontName: "20pt Arial",
     });
+    //---------------------------------------------------------------------------------------------------------
 
-//    var ww = 1450/screenW*100;
-//    var hh = 60/screenH*100;
-//    console.log(ww+" "+hh+" "+scoreboard.y)
- 
-    //    for(var i=32;i<=1000;++i) console.log(String.fromCharCode(i)+ " - "+i);
+
+    //------------------------------------------------- Power Bar ---------------------------------------------
  
  
     var colorRed = new BABYLON.StandardMaterial("colorRed", scene);
@@ -437,6 +433,7 @@
     colorOrange.diffuseColor = new BABYLON.Color3(1,0.6,0.2);
 
 
+    // ----- variables corresponding to power bar and shot power -----
     var power = [];
     var barAmount = 30;
     var currPower = 1;
@@ -446,6 +443,7 @@
     var shootingPower;
     var maxPower = 170;
     var currentColor;
+    // --------------------- end of variables ------------------------
  
     var barContainer = new BABYLON.ScreenSpaceCanvas2D(scene, {
         parent:canvas, x:screenW+(16.9/100*screenW), y:200,
@@ -503,42 +501,7 @@
     //------------------------------------------------------------------------------------------------------------
  
 
- 
-    // camera.lockedTarget = can2;
-
-     window.ondblclick = function(){
-        if(gameStart)
-        {
-            if (!camControl){
-                engine.isPointerLock = true;
-                camera.attachControl(canvas, false);
-                canvas.requestPointerLock = canvas.requestPointerLock ||
-                    canvas.mozRequestPointerLock ||
-                    canvas.webkitRequestPointerLock;
-                canvas.requestPointerLock();
-            }
-            else{
-                engine.isPointerLock = false;
-                camera.detachControl(canvas);
-                document.exitPointerLock = document.exitPointerLock ||
-                    document.mozExitPointerLock ||
-                    document.webkitExitPointerLock;
-                document.exitPointerLock();
-            }
-            camControl = !camControl;
-        }
-     };
-
-     window.addEventListener("mousemove", function(){
-         var pickResult = scene.pick(scene.pointerX, scene.pointerY);
-
-         // camera.rotationOffset += scene.pointerX/1000;
-
-        //      console.log(scene.pointerX);
-        //      console.log(scene.pointerY);
-     });
-
-    // ------------------------------------------ M E N U -----------------------------------------------------
+    // ------------------------------------- M E N U  and  S C R E E N ----------------------------------------
     // --------------------------------------------------------------------------------------------------------
         
     var size = document.getElementById("myCanvas");
@@ -584,6 +547,11 @@
             defaultFontColor: new BABYLON.Color4(0,0,0,1)
         }
     );
+
+    //---------------------------------------------------------------------------------------------------------
+
+
+    //-----------------------------------------REFRESH and START GAME------------------------------------------
 
     function refresh(){
         for(var i=1; i<=9; i++)
@@ -689,6 +657,35 @@
         moveCamera();
     }
 
+    //---------------------------------------------------------------------------------------------------------
+
+
+    //------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------- Game Controls ----------------------------------------------
+
+     window.ondblclick = function(){
+        if(gameStart)
+        {
+            if (!camControl){
+                engine.isPointerLock = true;
+                camera.attachControl(canvas, false);
+                canvas.requestPointerLock = canvas.requestPointerLock ||
+                    canvas.mozRequestPointerLock ||
+                    canvas.webkitRequestPointerLock;
+                canvas.requestPointerLock();
+            }
+            else{
+                engine.isPointerLock = false;
+                camera.detachControl(canvas);
+                document.exitPointerLock = document.exitPointerLock ||
+                    document.mozExitPointerLock ||
+                    document.webkitExitPointerLock;
+                document.exitPointerLock();
+            }
+            camControl = !camControl;
+        }
+     };
+
     window.onkeydown = function (event){
         event = event || window.event;
         var keyCodeDown = event.which || event.keyCode;
@@ -728,6 +725,9 @@
             }
         }
     }
+
+    //---------------------------------------------------------------------------------------------------------
+    //---------------------------------------------------------------------------------------------------------
  
     engine.runRenderLoop(function(){
         if(ballAmount>0)
