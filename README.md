@@ -68,6 +68,17 @@ The game starts with the animation of the door of the game arena being open, and
 - Sound
 	- door_1.wav
 
+## Limitations
+
+* Can will drop off the table by itself after a few minutes into the game.
+* Leftover of impulse might still take place if user rapidly presses the spacebar while the ball is being reset.
+
+## How To Play
+
+1. Clone/download the project from this repository.
+1. Open index.html using a web browser (Preferably Mozilla Firefox, textures might not show on other browser).
+1. Enjoy the game.
+
 ## Screenshots
 
 ![StartScreen](https://raw.githubusercontent.com/CSBinusInternational/L4BC-Group-1/master/screenshot/start.png)
