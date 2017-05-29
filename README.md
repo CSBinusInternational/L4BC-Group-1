@@ -72,6 +72,7 @@ The game starts with the animation of the door of the game arena being open, and
 
 * Can will drop off the table by itself after a few minutes into the game.
 * Leftover of impulse might still take place if user rapidly presses the spacebar while the ball is being reset.
+* HUD is made for 1920x1080 resolution, not responsive for other resolutions.
 
 ## How To Play
 
